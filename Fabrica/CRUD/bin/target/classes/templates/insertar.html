@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/insertar.css">
+    <title>Insertar Coche</title>
+</head>
+<body>
+    <div class="insertar-container">
+        <h1>Insertar Coche</h1>
+        <form action="/insertar" method="POST" autocomplete="off">
+            <div class="input-container">
+                <label for="marca">Marca:</label>
+                <input type="text" id="marca" name="marca" required>
+            </div>
+
+            <div class="input-container">
+                <label for="modelo">Modelo:</label>
+                <input type="text" id="modelo" name="modelo" required>
+            </div>
+
+            <div class="input-container">
+                <label for="año">Año:</label>
+                <input type="date" id="año" name="anio" required>
+            </div>
+
+            <div class="input-container">
+                <label for="matricula">Matrícula:</label>
+                <input type="text" id="matricula" name="matricula" required>
+            </div>
+
+            <div class="input-container">
+                <label for="num-chasis">Número de chasis:</label>
+                <input type="text" id="num-chasis" name="numChasis" required>
+            </div>
+
+            <button type="submit">Insertar</button>
+        </form>
+    </div>
+</body>
+</html>
