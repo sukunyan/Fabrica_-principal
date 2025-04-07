@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="gestionar.css">
+    <title>Gestionar Coches</title>
+</head>
+<body>
+    <div></div>
+    <div class="consulta-container">
+        <h1>Gestionar Coches</h1>
+        <form action="" method="POST">
+            <div class="buscar-container">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Buscar (Por Marca)">
+            </div>
+        </form>
+        <div class="mostrarConsulta-container">
+            <table>
+                <tr>
+                    <th>Marca</th>
+                    <th>Modelo</th>
+                    <th>Año</th>
+                    <th>Matrícula</th>
+                    <th>Número de Chasis</th>
+                    <th>Acciones</th>
+                </tr>
+                <tr>
+                    <td><input type="text" value="Ford"></td>
+                    <td><input type="text" value="Focus"></td>
+                    <td><input type="text" value="2020"></td>
+                    <td><input type="text" value="ABC-123"></td>
+                    <td><input type="text" value="XYZ789456"></td>
+                    <td>
+                        <div class="botones-container">
+                            <button class="btn-modificar"><i class="fas fa-edit"></i> Modificar</button>
+                            <button class="btn-eliminar"><i class="fas fa-trash"></i> Eliminar</button>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td><input type="text" value="Chevrolet"></td>
+                    <td><input type="text" value="Onix"></td>
+                    <td><input type="text" value="2019"></td>
+                    <td><input type="text" value="XYZ-456"></td>
+                    <td><input type="text" value="LMN123789"></td>
+                    <td>
+                        <div class="botones-container">
+                            <button class="btn-modificar"><i class="fas fa-edit"></i> Modificar</button>
+                            <button class="btn-eliminar"><i class="fas fa-trash"></i> Eliminar</button>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
