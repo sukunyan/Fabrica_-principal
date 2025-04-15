@@ -85,15 +85,16 @@ public class Usuario {
 	
 	@PostMapping
 	@ResponseBody
-	private ResponseEntity<Map<String, String>> modificarUsuario(@RequestParam(required=false) String User, @RequestParam(required=false) String email,
+	private ModelAndView modificarUsuario(@RequestParam(required=false) String User, @RequestParam(required=false) String email,
 															@RequestParam(required=false) String password, @RequestParam(required=false) String confirm_password,
 															@RequestParam String password_obl, HttpSession session){
+		
+		ModelAndView men = new ModelAndView();
 		
 		int cod = (int) session.getAttribute("Cod");
 		
 		SQL sql = new SQL();
 		ArrayList<SQL> Usuario = new ArrayList<>();
-		Map<String, String> response = new HashMap<>();
 		
 		String lector = "usuarios/";
 	    File carpeta = new File(lector);
@@ -107,6 +108,32 @@ public class Usuario {
 			
 			Statement consulta = conexion.createStatement();
 			
+			ResultSet confirmar = consulta.executeQuery("select cod, usuario, contrasenia, correo, admin from usuarios");
+			
+			while(confirmar.next()){
+					
+				System.out.println("==========================================================");
+				System.out.println("Usuario: " + confirmar.getString("usuario"));
+				System.out.println("Contraseña: " + confirmar.getString("contrasenia"));
+				System.out.println("Email: " + confirmar.getString("correo"));
+				System.out.println("Admin " + confirmar.getString("admin"));
+				System.out.println("==========================================================");
+				
+				usuario = confirmar.getString("usuario");
+				contrasenia = confirmar.getString("contrasenia");
+				correo = confirmar.getString("correo");
+				admin = confirmar.getInt("admin");
+				
+				if(User.equals(usuario)){
+					men.addObject("mensaje", "Nombre en uso");
+					return men;
+				}
+				if(email.equals(correo)) {
+					men.addObject("mensaje", "Correo en uso");
+					return men;
+				}
+				
+			}
 					
 			ResultSet revisar = consulta.executeQuery("select cod, usuario, contrasenia, correo, admin from usuarios where cod= " + cod);
 			
@@ -131,6 +158,19 @@ public class Usuario {
 				Usuario.add(user);
 
 				
+			}
+			
+			if(User.equals(usuario)) {
+				men.addObject("mensaje", "Nombre de usuario igual al anterior");
+				return men;
+			}
+			if(email.equals(correo)) {
+				men.addObject("mensaje", "Correo igual al anterior");
+				return men;
+			}
+			if(password.equals(contrasenia) && confirm_password.equals(contrasenia)) {
+				men.addObject("mensaje", "Contraseña usada anteriormente");
+				return men;
 			}
 			
 			if(password_obl.equals(contrasenia)) {
@@ -167,32 +207,31 @@ public class Usuario {
 						}else {
 							
 							System.out.println("Error al modificar usuario datos no coherentes o no posibles de introducir");
-							response.put("error", "Error al modificar usuario datos no coherentes o no posibles de introducir");
-							return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+							men.addObject("mensaje", "Error al modificar usuario datos no coherentes o no posibles de introducir");
+							return men;
 						}
 				} else {
-					response.put("error", "password diferente a la password Confirm");
-		            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+		            men.addObject("mensaje", "password diferente a la password Confirm");
+		            return men;
 				}
 			
 			} else {
-				response.put("error", "password equivocada");
-	            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+	            men.addObject("mensaje", "password equivocada");
+	            return men;
 			}
 				
 			conexion.close();
-				
-			response.put("info", "pasando de pagina");
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+			
+            men.addObject("mensaje", "Cambios guardados con exito");
+            return men;
 			
 		} catch (Exception e) {
 			
 			System.out.println(e);
-			
-			response.put("error", "Error al aplicar los cambios");
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
-			
+			men.addObject("mensaje", "Error al aplicar los cambios");
+			return men;
 		}
+		
 	}
 	
 }
