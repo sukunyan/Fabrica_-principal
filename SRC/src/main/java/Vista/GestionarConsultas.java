@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import Modelo.Coches;
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/gestionar")
@@ -28,8 +29,13 @@ public class GestionarConsultas {
 
 	ArrayList<Coches> coches = new ArrayList<>();
 	@GetMapping
-	public ModelAndView Gestionador() {
-		return new ModelAndView("/gestionar");
+	public ModelAndView Gestionador(HttpSession session) {
+		
+		if (session.getAttribute("Cod") == null) {
+	        return new ModelAndView("redirect:/login");
+	    } else {
+	    	return new ModelAndView("/gestionar");
+	    }
 	}
 	
 	@GetMapping("/datos")

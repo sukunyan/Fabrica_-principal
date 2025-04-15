@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import Modelo.Coches;
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/insertar")
@@ -21,8 +22,12 @@ public class Insertar {
 	Coches coches = new Coches();
 	
 	@GetMapping
-    public ModelAndView AbrirInsertar() {
-        return new ModelAndView("insertar");  
+    public ModelAndView AbrirInsertar(HttpSession session) {
+		if (session.getAttribute("Cod") == null) {
+	        return new ModelAndView("redirect:/login");
+	    } else {
+	    	return new ModelAndView("insertar");  
+	    }
     }
 	
 	@PostMapping

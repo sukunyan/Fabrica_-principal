@@ -35,7 +35,7 @@ public class Registro {
 
     @GetMapping
     public ModelAndView mostrarFormularioRegistro() {
-        return new ModelAndView("registrar");
+	    	return new ModelAndView("registrar");
     }
 
     @PostMapping

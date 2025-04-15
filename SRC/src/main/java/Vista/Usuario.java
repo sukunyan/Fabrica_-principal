@@ -9,6 +9,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -20,19 +23,73 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import Modelo.SQL;
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/usuario")
 public class Usuario {
-    
+	
+	@GetMapping("/datos")
+	private Map<String, String> obtenerDatosUsuario() {
+	    Map<String, String> datos = new HashMap<>();
+	    
+	    try {
+	        Connection conexion = DriverManager.getConnection("jdbc:mysql://127.0.0.1/fabrica", "root", "");
+	        
+	        Statement consulta = conexion.createStatement();
+	       
+	        ResultSet revisar = consulta.executeQuery("select cod, usuario, contrasenia, correo, admin from usuarios;"); 
+
+	        if (revisar.next()) {
+	            String usuario = revisar.getString("usuario");
+	            datos.put("usuario", usuario);
+	        }
+
+	        conexion.close();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        datos.put("error", "Error al obtener los datos");
+	    }
+
+	    return datos;
+	}
+	
 	@GetMapping
-    public ModelAndView mostrarUsuario() {
-        return new ModelAndView("usuario"); 
-    }
+	public ModelAndView mostrarUsuario(HttpSession session) {
+	    ModelAndView mav = new ModelAndView("usuario");
+	    
+	    if (session.getAttribute("Cod") == null) {
+	        return new ModelAndView("redirect:/login");
+	    } 
+
+	    try {
+	        int cod = (int) session.getAttribute("Cod");
+
+	        Connection conexion = DriverManager.getConnection("jdbc:mysql://127.0.0.1/fabrica", "root", "");
+	        Statement consulta = conexion.createStatement();
+
+	        ResultSet revisar = consulta.executeQuery("select usuario from usuarios where cod = " + cod);
+
+	        if (revisar.next()) {
+	            String usuario = revisar.getString("usuario");
+	            mav.addObject("nombreUsuario", usuario);
+	        }
+
+	        conexion.close();
+	    } catch (Exception e) {
+	        mav.addObject("nombreUsuario", "Usuario");
+	    }
+
+	    return mav;
+	}
 	
 	@PostMapping
 	@ResponseBody
-	private ResponseEntity<Map<String, String>> modificarUsuario(@RequestParam String User, @RequestParam String email, @RequestParam String password, @RequestParam String confirm_password){
+	private ResponseEntity<Map<String, String>> modificarUsuario(@RequestParam(required=false) String User, @RequestParam(required=false) String email,
+															@RequestParam(required=false) String password, @RequestParam(required=false) String confirm_password,
+															@RequestParam String password_obl, HttpSession session){
+		
+		int cod = (int) session.getAttribute("Cod");
 		
 		SQL sql = new SQL();
 		ArrayList<SQL> Usuario = new ArrayList<>();
@@ -41,7 +98,6 @@ public class Usuario {
 		String lector = "usuarios/";
 	    File carpeta = new File(lector);
 	    File[] archivos = carpeta.listFiles();
-	    int cod = 0;
 	    String usuario = "", contrasenia = "", correo = "";
 	    int admin = 0;
 		
@@ -52,20 +108,18 @@ public class Usuario {
 			Statement consulta = conexion.createStatement();
 			
 					
-			ResultSet revisar = consulta.executeQuery("select cod, usuario, contrasenia, correo, admin from usuarios;");
+			ResultSet revisar = consulta.executeQuery("select cod, usuario, contrasenia, correo, admin from usuarios where cod= " + cod);
 			
 			
 			while(revisar.next()){
 				
 				System.out.println("==========================================================");
-				System.out.println("Cod: " + revisar.getString("cod"));
 				System.out.println("Usuario: " + revisar.getString("usuario"));
 				System.out.println("Contraseña: " + revisar.getString("contrasenia"));
 				System.out.println("Email: " + revisar.getString("correo"));
 				System.out.println("Admin " + revisar.getString("admin"));
 				System.out.println("==========================================================");
 				
-				cod = revisar.getInt("cod");
 				usuario = revisar.getString("usuario");
 				contrasenia = revisar.getString("contrasenia");
 				correo = revisar.getString("correo");
@@ -79,59 +133,57 @@ public class Usuario {
 				
 			}
 			
-			if(User==null) {
-				User = usuario;
-				System.out.println(User);
-			} else if(email==null) {
-				email = correo;
-				System.out.println(email);
-			} else if(password==null || confirm_password==null) {
-				password = contrasenia;
-				confirm_password = contrasenia;
-				System.out.println(password + confirm_password);
-			}
+			if(password_obl.equals(contrasenia)) {
 			
-			System.out.println(User+ " " + email + " " + password + " " + confirm_password);
+				if(User.isEmpty()) {
+					User = usuario;
+					System.out.println("dato del usuario modificado al original: " + User); 
+				}
+				if(email.isEmpty()) {
+					email = correo;
+					System.out.println("dato del usuario modificado al original: " + email);
+				}
+				if(password.isEmpty()) {
+					password=contrasenia;
+					System.out.println("dato del usuario modificado al original: " + password);
+				}
+				if(confirm_password.isEmpty()) {
+					confirm_password=contrasenia;
+					System.out.println("dato del usuario modificado al original: " + confirm_password);
+				}
+				
+				if(password.equals(confirm_password)) {
+					System.out.println("update usuarios set usuario='" + User + "', contrasenia='" + confirm_password + "', correo='" + email + "' where cod='" + cod + "'");
+						
+						// En valor guardamos el resultado del update (1 si todo ha ido bien)
+						
+						int valor = consulta.executeUpdate("update usuarios set usuario='" + User + "', contrasenia='" + confirm_password + "', correo='" + email + "' where cod=" + cod );
 			
-			if(password.equals(confirm_password)) {
-				
-				
-					/*
-					System.out.println("update usuarios set ");
-					
-					// En valor guardamos el resultado del update (1 si todo ha ido bien)
-					
-					int valor = consulta.executeUpdate("update coches set marca='" 
-						    + cocheModificado.getMarca() + "', modelo='" + cocheModificado.getModelo() + 
-						    "', anio='" + cocheModificado.getFecha() + "', matricula='" 
-						    + cocheModificado.getMatricula() + "', numChasis='" + cocheModificado.getNumChasis() + "'" + 
-						    " where cod='" + cocheModificado.getCod() + "'");
-		
-					
-					if(valor==1) {
 						
-						System.out.println("Coche modificado correctamente");
-						
-					}else {
-						
-						System.out.println("No existe un coche con ese id");
-						
-					}
-					*/
-				
-				
-				conexion.close();
-				
-				System.out.println(User+ " " + email + " " + password + " " + confirm_password);
-				
-				response.put("info", "Cambios confirmados");
-				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
-				
+						if(valor==1) {
+							
+							System.out.println("Cambios cambiados correctamente");
+							
+						}else {
+							
+							System.out.println("Error al modificar usuario datos no coherentes o no posibles de introducir");
+							response.put("error", "Error al modificar usuario datos no coherentes o no posibles de introducir");
+							return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+						}
+				} else {
+					response.put("error", "password diferente a la password Confirm");
+		            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+				}
+			
 			} else {
-            
-				response.put("error", "Password diferente a la de confirmar");
+				response.put("error", "password equivocada");
 	            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
 			}
+				
+			conexion.close();
+				
+			response.put("info", "pasando de pagina");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
 			
 		} catch (Exception e) {
 			
@@ -141,8 +193,6 @@ public class Usuario {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
 			
 		}
-		
-		
 	}
 	
 }

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+
 import org.springframework.http.HttpStatus;
 
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -17,6 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import Modelo.SQL;
+import jakarta.servlet.http.HttpSession;
 
 import java.io.File;
 import java.io.IOException;
@@ -66,7 +68,7 @@ public class Login {
 	
 	@PostMapping
 	@ResponseBody
-	public ResponseEntity<Map<String, String>> iniciarSesion(@RequestParam String Usuario, @RequestParam String Contrasenia) {
+	public ResponseEntity<Map<String, String>> iniciarSesion(@RequestParam String Usuario, @RequestParam String Contrasenia, HttpSession session) {
 	    String lector = "usuarios/";
 	    File carpeta = new File(lector);
 	    File[] archivos = carpeta.listFiles();
@@ -113,7 +115,12 @@ public class Login {
 				User.add(user);
 				
 				if(Usuario.equals(usuario) && Contrasenia.equals(contrasenia)) {
+					
+					session.setAttribute("Cod", cod);
+					session.setAttribute("Usuario", usuario);
+					
 					response.put("mensaje", "Inicio de sesion exitoso");
+					
 					return ResponseEntity.ok(response);
 				}
 				
