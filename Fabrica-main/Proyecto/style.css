@@ -1,0 +1,70 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: linear-gradient(to bottom, #0f2027, #203a43, #2c5364);
+}
+.login-container {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    width: 320px;
+    text-align: center;
+    backdrop-filter: blur(10px);
+}
+.login-container img {
+    width: 100px;
+    margin: 20px;
+    border-radius: 50%;
+}
+.input-container {
+    position: relative;
+    margin-bottom: 1rem;
+}
+.input-container input {
+    width: 100%;
+    padding: 10px 10px 10px 40px;
+    border: none;
+    border-radius: 5px;
+    background: rgba(255, 255, 255, 0.8);
+    outline: none;
+}
+.input-container i {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #333;
+}
+.options {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9rem;
+    color: white;
+    margin-bottom: 1rem;
+}
+.options a {
+    color: #ddd;
+    text-decoration: none;
+}
+.login-container button {
+    width: 100%;
+    padding: 10px;
+    background: #1a1a1a;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+.login-container button:hover {
+    background: #333;
+}

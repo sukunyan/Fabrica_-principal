@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="/css/login.css">
+    <title>Login</title>
+</head>
+<body>
+    <div class="login-container">
+        <img src="images/login-avatar.png" alt="User Avatar">
+        <form action="/login" method="POST">
+            <div class="input-container">
+                <i class="fas fa-user"></i>
+                <input type="text" id="Usuario" name="Usuario" placeholder="Usuario" required>
+            </div>
+            <div class="input-container">
+                <i class="fas fa-lock"></i>
+                <input type="password" id="Contraseña" name="Contraseña" placeholder="Contraseña" required>
+            </div>
+            <button type="submit">Iniciar Sesión</button>
+            <div class="registrar-container">
+                <p>¿No tienes Cuenta?</p>
+                <a href="registrar">Registrate</a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

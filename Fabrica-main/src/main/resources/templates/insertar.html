@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="/css/insertar.css">
+    <title>Insertar Coche</title>
+	<script src="/js/insertar.js" defer></script>
+</head>
+<body>
+	<nav class="barra-menu">
+	    <div class="logo"><img class="logo-img" src="images/logo.png"></div>
+	    <ul>
+	        <li><a href="/panel"><i class="fas fa-home"></i> Inicio</a></li>
+	        <li><a href="/gestionar"><i class="fas fa-search"></i> Consulta</a></li>
+	        <li class="usuario">
+	            <a href="/usuario"><img id="imagen-perfil" src="/imagenes/default.png" alt="Usuario"></a>
+	        </li>
+	        <li><a href="/insertar/logout"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a></li>
+	    </ul>
+	</nav>
+    <div class="insertar-container">
+        <h1>Insertar Coche</h1>
+        <form action="/insertar" method="POST" autocomplete="off">
+            <div class="input-container">
+                <label for="marca">Marca:</label>
+                <input type="text" id="marca" name="marca" required>
+            </div>
+
+            <div class="input-container">
+                <label for="modelo">Modelo:</label>
+                <input type="text" id="modelo" name="modelo" required>
+            </div>
+
+            <div class="input-container">
+                <label for="año">Año:</label>
+                <input type="date" id="año" name="anio" required>
+            </div>
+
+            <div class="input-container">
+                <label for="matricula">Matrícula:</label>
+                <input type="text" id="matricula" name="matricula" required>
+            </div>
+
+            <div class="input-container">
+                <label for="num-chasis">Número de chasis:</label>
+                <input type="text" id="num-chasis" name="numChasis" required>
+            </div>
+			<div class="mensaje-error hidden"></div>
+            <button type="submit">Insertar</button>
+        </form>
+    </div>
+</body>
+</html>

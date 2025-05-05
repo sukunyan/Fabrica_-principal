@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="/css/panel.css">
+    <title>Principal</title>
+</head>
+<body>
+	<nav class="barra-menu">
+	    <div class="logo"><img class="logo-img" src="images/logo.png"></div>
+	    <ul>
+	        <li class="usuario">
+	            <a href="usuario"><img id="imagen-perfil" src="/imagenes/default.png" alt="Usuario"></a>
+	        </li>
+	        <li><a href="/panel/logout"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a></li>
+	    </ul>
+	</nav>
+	
+    <nav class="menu">
+        <ul>
+            <li><a href="/insertar">Insertar</a></li>
+            <li><a href="/gestionar">Gestion De Coches</a></li>
+        </ul>
+    </nav>
+	<script>
+		const imagenPerfil = document.getElementById("imagen-perfil");
+
+		fetch("/usuario/imagenes")
+		    .then(response => response.json())
+		    .then(data => {
+		        if (data.url && imagenPerfil) {
+		            imagenPerfil.src = data.url;
+		        }
+		    })
+		    .catch(error => {
+		        console.error('Error al obtener la imagen:', error);
+		    });
+	</script>
+</body>
+</html>
